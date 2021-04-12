@@ -16,7 +16,7 @@ def get_args_training():
     args.add_argument('--logging', type=str, default='./logging')
     args.add_argument('--result_path', type=str, default='./result')
     args.add_argument('--saved_img', type=str, default='../saved_img')
-    args.add_argument('--resume', type=bool, default=False)
+    args.add_argument('--resume', action='store_true', default=False)
     args.add_argument('--backbone', type=str, default='ResEncoder')
     args.add_argument('--bridge', type=str, default='ResBridge')
     args.add_argument('--decoder', type=str, default='ResDecoder')

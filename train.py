@@ -123,7 +123,7 @@ def main(args):
 
     # Load model
     args.loaded_epoch = None
-    if False:
+    if args.resume:
         print("Load model")
         checkpoint = torch.load(checkpoint_name)
         load_checkpoint(checkpoint, model, optimizer, lr_scheduler)
