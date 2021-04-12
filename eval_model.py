@@ -95,7 +95,7 @@ for _data_name in ['CVC-300', 'CVC-ClinicDB', 'Kvasir', 'CVC-ColonDB', 'ETIS-Lar
             pred_mask = F.sigmoid(pred_mask)
 
             # Save all predicting masks
-            plot_results(pred_masks=pred_mask, true_masks=gt, images=real_image, result_path=save_path, name=name)
+            # plot_results(pred_masks=pred_mask, true_masks=gt, images=real_image, result_path=save_path, name=name)
 
             # Calculate all scores
             _recall, _specificity, _precision, _F1, _F2, \
