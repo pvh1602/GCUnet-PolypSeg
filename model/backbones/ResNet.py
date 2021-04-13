@@ -1,7 +1,6 @@
 import torch
 from torch import Tensor
 import torch.nn as nn
-# from .utils import load_state_dict_from_url
 from typing import Type, Any, Callable, Union, List, Optional
 
 try:
@@ -10,21 +9,13 @@ except ImportError:
     from torch.utils.model_zoo import load_url as load_state_dict_from_url
 
 
-__all__ = ['ResNet', 'resnet18', 'resnet34', 'resnet50', 'resnet101',
-           'resnet152', 'resnext50_32x4d', 'resnext101_32x8d',
-           'wide_resnet50_2', 'wide_resnet101_2']
+__all__ = ['ResNet', 'resnet18', 'resnet34', 'resnet50']
 
 
 model_urls = {
     'resnet18': 'https://download.pytorch.org/models/resnet18-f37072fd.pth',
     'resnet34': 'https://download.pytorch.org/models/resnet34-b627a593.pth',
     'resnet50': 'https://download.pytorch.org/models/resnet50-0676ba61.pth',
-    'resnet101': 'https://download.pytorch.org/models/resnet101-63fe2227.pth',
-    'resnet152': 'https://download.pytorch.org/models/resnet152-394f9c45.pth',
-    'resnext50_32x4d': 'https://download.pytorch.org/models/resnext50_32x4d-7cdf4587.pth',
-    'resnext101_32x8d': 'https://download.pytorch.org/models/resnext101_32x8d-8ba56ff5.pth',
-    'wide_resnet50_2': 'https://download.pytorch.org/models/wide_resnet50_2-95faca4d.pth',
-    'wide_resnet101_2': 'https://download.pytorch.org/models/wide_resnet101_2-32ee1156.pth',
 }
 
 
@@ -185,10 +176,8 @@ class ResNet(nn.Module):
                                        dilate=replace_stride_with_dilation[0])
         self.layer3 = self._make_layer(block, 256, layers[2], stride=2,
                                        dilate=replace_stride_with_dilation[1])
-        self.layer4 = self._make_layer(block, 512, layers[3], stride=2,
-                                       dilate=replace_stride_with_dilation[2])
-        self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
-        self.fc = nn.Linear(512 * block.expansion, num_classes)
+        # self.layer4 = self._make_layer(block, 512, layers[3], stride=2,
+        #                                dilate=replace_stride_with_dilation[2]) 
 
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
@@ -233,28 +222,33 @@ class ResNet(nn.Module):
 
         return nn.Sequential(*layers)
 
+
+    def load_pretrained_model(self):
+        pass
+
     def _forward_impl(self, x: Tensor) -> Tensor:
         # See note [TorchScript super()]
         x = self.conv1(x)
         x = self.bn1(x)
         x = self.relu(x)
         x = self.maxpool(x)
+        # print(f"features after conv and pooling {x.shape}")     # 1, 64, 64, 64
         features = []
         x = self.layer1(x)
-        features.append(x)      # 64
+        features.append(x)      # 1, 64, 64, 64
+        # print(f"features after layer 1 {x.shape}")
         x = self.layer2(x)  
-        features.append(x)      # 32
+        features.append(x)      # 1, 128, 32, 32
+        # print(f"features after layer 2 {x.shape}")
         x = self.layer3(x)
-        features.append(x)      # 16
-        x = self.layer4(x)      # Use BoT at here
-        features.append(x)
+        features.append(x)      # 1, 256, 16, 16
+        # print(f"features after layer 3 {x.shape}")
+        # x = self.layer4(x)      # Use BoT at here
+        # features.append(x)      # 1, 512, 8, 8
+        # print(f"features after layer 4 {x.shape}")
 
         return features 
-        x = self.avgpool(x)
-        x = torch.flatten(x, 1)
-        x = self.fc(x)
 
-        return x
 
     def forward(self, x: Tensor) -> Tensor:
         return self._forward_impl(x)
@@ -270,9 +264,21 @@ def _resnet(
 ) -> ResNet:
     model = ResNet(block, layers, **kwargs)
     if pretrained:
-        state_dict = load_state_dict_from_url(model_urls[arch],
+        pretrained_state_dict = load_state_dict_from_url(model_urls[arch],
                                               progress=progress)
-        model.load_state_dict(state_dict)
+        pretrained_param_names = list(pretrained_state_dict.keys())
+        print("Pretrained params: ")
+        print(pretrained_param_names)
+
+        state_dict = model.state_dict()
+        param_names = list(state_dict.keys())
+        print("Model params: ")
+        print(param_names)
+
+
+        # for name, param
+
+        # model.load_state_dict(state_dict)
     return model
 
 
@@ -307,3 +313,10 @@ def resnet50(pretrained: bool = False, progress: bool = True, **kwargs: Any) -> 
     """
     return _resnet('resnet50', Bottleneck, [3, 4, 6, 3], pretrained, progress,
                    **kwargs)
+
+
+
+if __name__ == '__main__':
+    x = torch.randn(1,3,256,256).to('cuda')
+    model = resnet18(pretrained=True).to('cuda')
+    y = model(x)
