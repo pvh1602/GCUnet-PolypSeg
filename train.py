@@ -26,45 +26,6 @@ np.random.seed(SEED)
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 
-# def train_epoch(model, criterion, optimizer, device, data_loader, args=None,
-#                 metric=None, lr_scheduler=None, warmup_schduler=None, scaler=None, epoch=1):
-
-#         model.train()
-#         if metric is not None:
-#             metric.reset()
-
-#         loop = tqdm.tqdm(data_loader, desc=f'Epoch {epoch}')
-
-#         for batch_idx, (data, target) in enumerate(loop):
-#         # data, target = next(iter(self.data_loader))
-#             data, target = data.to(device), target.float().to(device)
-
-            
-#             with torch.cuda.amp.autocast():
-#                 output = model(data)
-#                 loss = criterion(output, target)
-
-#             optimizer.zero_grad()
-#             scaler.scale(loss).backward()
-#             scaler.step(optimizer)
-#             scaler.update()
-
-#             if lr_scheduler is not None:
-#                 # print("lr_scheduler")
-#                 lr_scheduler.step()
-#             if warmup_schduler is not None:
-#                 # print("warmup_schuler")
-#                 warmup_schduler.dampen()
-            
-#             metric.update(loss.item())
-#             loop.set_postfix(loss=loss.item())
-        
-#         avg_loss = metric.show()
-#         args.logger.info(f'Epoch {epoch} \t Loss {avg_loss}')
-
-#         # exit()
-
-
 
 def main(args):
 
@@ -102,7 +63,8 @@ def main(args):
 
     # Model setting
     model = Unet(in_channels=3).to(device)
-    # summary(model, (3,256,256))
+    summary(model, (3,256,256))
+    exit()
     criterion = getattr(module_loss, args.loss_func)
     metric = AvgMeter() 
 

@@ -21,7 +21,7 @@ class Trainer():
         self.lr_scheduler = lr_scheduler
         self.warmup_schduler = warmup_schduler
         self.scaler = scaler
-        self.data, self.target = next(iter(self.data_loader))
+        # self.data, self.target = next(iter(self.data_loader))
 
 
     def _train_epoch(self, epoch):
