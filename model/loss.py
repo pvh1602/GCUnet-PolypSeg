@@ -17,6 +17,20 @@ def structure_loss(pred, mask):
     wiou = 1 - (inter + 1)/(union - inter+1)
     return (wbce + wiou).mean()
 
+
 def BCE_loss(pred, mask):
     return F.binary_cross_entropy_with_logits(pred, mask)
+
+
+def MSE_loss(pred, mask):
+    return F.mse_loss(pred, mask)
+
+
+def Dice_loss(pred, mask):
+    smooth = 1.
+    intersection = (mask * pred).sum()  
+    score = (2. * intersection + smooth) / (mask.sum() + pred.sum() + smooth) 
+    return 1 - score
+
+
 
