@@ -16,32 +16,33 @@ class ResidualBlock(nn.Module):
         self.conv_block = nn.Sequential(
             nn.BatchNorm2d(input_dim),
             nn.ReLU(),
-            nn.Conv2d(input_dim, output_dim, kernel_size=3, stride=stride, padding=padding),
+            nn.Conv2d(
+                input_dim, output_dim, kernel_size=3, stride=stride, padding=padding
+            ),
             nn.BatchNorm2d(output_dim),
             nn.ReLU(),
-            nn.Conv2d(output_dim, output_dim, kernel_size=3, padding=1)     # Keep feature's size not change
+            nn.Conv2d(output_dim, output_dim, kernel_size=3, padding=1),
         )
-
-        self.skip_connection = nn.Sequential(
-            nn.Conv2d(input_dim, output_dim, kernel_size=3, stride=stride, padding=padding),
-            nn.BatchNorm2d(output_dim)
+        self.conv_skip = nn.Sequential(
+            nn.Conv2d(input_dim, output_dim, kernel_size=3, stride=stride, padding=1),
+            nn.BatchNorm2d(output_dim),
         )
 
     def forward(self, x):
-        
-        return self.conv_block(x) + self.skip_connection(x)
+
+        return self.conv_block(x) + self.conv_skip(x)
     
 
 class UpSample(nn.Module):
     def __init__(self, input_dim, output_dim, kernel_size, stride):
         super(UpSample, self).__init__()
 
-        self.up_sample = nn.ConvTranspose2d(
+        self.upsample = nn.ConvTranspose2d(
             input_dim, output_dim, kernel_size=kernel_size, stride=stride
         )
 
     def forward(self, x):
-        return self.up_sample(x)
+        return self.upsample(x)
 
 
 class SElayer(nn.Module):

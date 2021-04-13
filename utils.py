@@ -34,7 +34,10 @@ def load_checkpoint(checkpoint, model, optimizer=None, lr_scheduler=None):
     if optimizer is not None:
         optimizer.load_state_dict(checkpoint["optimizer"])
     if lr_scheduler is not None:
-        lr_scheduler.load_state_dict(checkpoint["lr_scheduler"])
+        if checkpoint["lr_scheduler"] is not None:
+            lr_scheduler.load_state_dict(checkpoint["lr_scheduler"])
+        else:
+            print(f"")
 
 
 def weights_init(m):

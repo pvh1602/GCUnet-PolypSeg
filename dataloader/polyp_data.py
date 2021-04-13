@@ -78,7 +78,11 @@ class PolypDataset(data.Dataset):
         return self.size
 
 
-def get_loaders(image_root, gt_root, batchsize, trainsize, shuffle=True, num_workers=1, pin_memory=True):
+def get_loaders(image_root, gt_root, batchsize, trainsize, shuffle=True, num_workers=4, pin_memory=True):
+    print(image_root)
+    print(gt_root)
+    print(batchsize)
+    print(trainsize)
 
     dataset = PolypDataset(image_root, gt_root, trainsize)
     data_loader = data.DataLoader(dataset=dataset,
@@ -149,15 +153,15 @@ def get_test_loader(image_root, gt_root, batchsize, trainsize, shuffle=True, num
     return data_loader
 
 if __name__ == '__main__':
-    # img_root = '../../data/TrainDataset/image/'     # Need '/' at the end of root's name
-    # gt_root = '../../data/TrainDataset/mask/'
+    img_root = '../../data/TrainDataset/image/'     # Need '/' at the end of root's name
+    gt_root = '../../data/TrainDataset/mask/'
 
-    # polyp = PolypDataset(img_root, gt_root, trainsize=256)
-    # img, mask = polyp.__getitem__(6)
-    # print(f"Image type {type(img)}")
-    # print(f"Mask type {type(mask)}")
-    # print(f"Image shape: {img.shape}")
-    # print(f"Mask shape: {mask.shape}")
+    polyp = PolypDataset(img_root, gt_root, trainsize=256)
+    img, mask = polyp.__getitem__(6)
+    print(f"Image type {type(img)}")
+    print(f"Mask type {type(mask)}")
+    print(f"Image shape: {img.shape}")
+    print(f"Mask shape: {mask.shape}")
 
     img_test = '../../data/TestDataset/Kvasir/images/'
     gt_test = '../../data/TestDataset/Kvasir/masks/'
