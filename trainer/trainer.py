@@ -39,8 +39,7 @@ class Trainer():
         loop = tqdm.tqdm(self.data_loader, desc=f'Epoch {epoch}/{self.n_epochs}')
 
         for batch_idx, (data, target) in enumerate(loop):
-        # data, target = next(iter(self.data_loader))
-            data, target = self.data.to(self.device), self.target.float().to(self.device)
+            data, target = data.to(self.device), target.float().to(self.device)
 
             
             with torch.cuda.amp.autocast():
@@ -80,14 +79,22 @@ class Trainer():
 
     def _save_checkpoint(self, epoch):
         print(f"Saving checkpoint at epoch {epoch} ...")
-        state = {
-            'epoch': epoch,
-            'optimizer': self.optimizer.state_dict(),
-            'model': self.model.state_dict(),
-            'lr_scheduler': self.lr_scheduler.state_dict()
-        }
+        if self.lr_scheduler is not None:
+            state = {
+                'epoch': epoch,
+                'optimizer': self.optimizer.state_dict(),
+                'model': self.model.state_dict(),
+                'lr_scheduler': self.lr_scheduler.state_dict()
+            }
+        else:
+            state = {
+                'epoch': epoch,
+                'optimizer': self.optimizer.state_dict(),
+                'model': self.model.state_dict(),
+            }
         torch.save(state, self.args.checkpoint_name)
         print(f'=> Saved checkpoint at {self.args.checkpoint_name}')
+
 
 
     def _valid_epoch(self, epoch):

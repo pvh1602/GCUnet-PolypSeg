@@ -12,7 +12,7 @@ from torchsummary import summary
 
 import model.loss as module_loss
 from model.metric import *
-from model.model import Unet
+from model.model import *
 from dataloader.polyp_data import *
 from trainer.trainer import *
 from utils import *
@@ -64,7 +64,6 @@ def main(args):
     # Model setting
     model = Unet(in_channels=3).to(device)
     # summary(model, (3,256,256))
-    # exit()
     criterion = getattr(module_loss, args.loss_func)
     metric = AvgMeter() 
 
@@ -74,13 +73,10 @@ def main(args):
     )
 
     # Optimizer setting
-    optimizer = optim.Adam(model.parameters(), lr=args.lr)
+    optimizer = optim.Adam(model.parameters(), lr=1e-4)
     n_steps = n_epochs * len(data_loader)
     lr_scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=n_steps)
-    warmup_schduler = warmup.UntunedLinearWarmup(optimizer)
     scaler = torch.cuda.amp.GradScaler()
-
-    # lr_scheduler = None
     warmup_schduler = None
 
     # Load model
@@ -90,6 +86,7 @@ def main(args):
         checkpoint = torch.load(checkpoint_name)
         load_checkpoint(checkpoint, model, optimizer, lr_scheduler)
         args.loaded_epoch = 1 +  checkpoint['epoch']
+
 
     trainer = Trainer(
         model=model, 
@@ -106,18 +103,6 @@ def main(args):
     )
     trainer.train()
     
-    # for epoch in range(n_epochs):
-    #     train_epoch(model=model, 
-    #                 criterion=criterion, 
-    #                 optimizer=optimizer, 
-    #                 device=device, 
-    #                 data_loader=data_loader,
-    #                 metric=metric,
-    #                 lr_scheduler=lr_scheduler,
-    #                 warmup_schduler=warmup_schduler,
-    #                 scaler=scaler,
-    #                 args=args,
-    #                 epoch=epoch)
 
 
 if __name__ == '__main__':
