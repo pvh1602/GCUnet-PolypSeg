@@ -20,14 +20,15 @@ if args.decoder == 'ResDecoder':
 class Unet(nn.Module):
     def __init__(self, in_channels, filters=[64, 128, 256, 512], fmap_size=(args.train_size, args.train_size), num_block=args.n_blocks):
         super(Unet, self).__init__()
+        filters = [2**(i+6) for i in range(args.n_filters)]
         self.enc_filters = filters[:-1]
         self.bridge_in_channels = filters[-2]
         self.bridge_out_channels = filters[-1]
         self.dec_filters = filters
         self.fmap_size = list(fmap_size)
         self.bridge_in_fmap_size = [
-            int(self.fmap_size[0] / pow(2, len(self.enc_filters))),
-            int(self.fmap_size[1] / pow(2, len(self.enc_filters)))
+            int(self.fmap_size[0] / pow(2, len(self.enc_filters)-1)),
+            int(self.fmap_size[1] / pow(2, len(self.enc_filters)-1))
         ]
 
         self.encoder = encoder(in_channels=in_channels, filters=self.enc_filters, fmap_size=fmap_size)

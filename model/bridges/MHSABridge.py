@@ -241,3 +241,12 @@ class BottleStack(nn.Module):
         assert c == self.dim, f'channels of feature map {c} must match channels given at init {self.dim}'
         assert h == self.fmap_size[0] and w == self.fmap_size[1], f'height and width ({h} {w}) of feature map must match the fmap_size given at init {self.fmap_size}'
         return self.net(x)
+
+
+class MHSABridge(nn.Module):
+    def __init__(self, in_channels, out_channels, fmap_size=None, num_block=None):
+        super(MHSABridge, self).__init__()
+        self.BoT = BottleStack(dim=in_channels, fmap_size=fmap_size, dim_out=out_channels, num_layers=num_block)
+
+    def forward(self, x):
+        return self.BoT(x)

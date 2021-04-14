@@ -21,6 +21,7 @@ def get_args_training():
     args.add_argument('--bridge', type=str, default='ResBridge')
     args.add_argument('--decoder', type=str, default='ResDecoder')
     args.add_argument('--n_blocks', type=int, default=1)
+    args.add_argument('--n_filters', type=int, default=4)
     
     args = args.parse_args()
 

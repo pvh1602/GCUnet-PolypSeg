@@ -42,7 +42,11 @@ def main(args):
     n_epochs = args.n_epochs
 
     file_path = args.backbone + '_' + args.bridge + '_' + args.decoder
-    file_name = args.loss_func + '_size_' + str(args.train_size) + '_bs_' + str(args.batch_size)
+    file_name = args.loss_func + '_size_' + str(args.train_size) + '_bs_' + str(args.batch_size) \
+                                + '_nfilters_' + str(args.n_filters)
+    
+    if 'MHSA' in args.bridge:
+        file_name = file_name + '_nblocks_' + str(args.n_blocks)
 
     # Checkpoint setting
     checkpoint_path = os.path.join(args.saved_checkpoint, file_path)
@@ -54,7 +58,7 @@ def main(args):
     logging_path = os.path.join(args.logging, file_path)
     create_dir(logging_path)
     logging_name = os.path.join(logging_path, file_name + '.log')
-    # if os.path.exists(logging_name):
+    # if os.path.exists(logging_name) and not args.resume:
     #     os.remove(logging_name)
     logging.basicConfig(filename=logging_name, format='%(asctime)s %(message)s', filemode='a')       
     logger = logging.getLogger()
@@ -106,20 +110,7 @@ def main(args):
 
 
 if __name__ == '__main__':
-    # args = argparse.ArgumentParser(description='Unet')
-    # args.add_argument('--n_epochs', type=int, default=100, help='The number of epoch')
-    # args.add_argument('--batch_size', type=int, default=8)
-    # args.add_argument('--lr', type=float, default=0.001)
-    # args.add_argument('--loss_func', type=str, default='structure_loss', help='Loss function')
-    # args.add_argument('--train_size', type=int, default=256)
-    # args.add_argument('--img_root', type=str, default='../data/TrainDataset/image/')
-    # args.add_argument('--gt_root', type=str, default='../data/TrainDataset/mask/')
-    # args.add_argument('--saved_path', type=str, default='./saved_models')
-    # args.add_argument('--logging', type=str, default='./logging')
-    # args.add_argument('--backbone', type=str, default='ResEncoder')
-    # args.add_argument('--bridge', type=str, default='ResBlock')
-    # args.add_argument('--decoder', type=str, default='ResDecoder')
-    # args.add_argument('--n_blocks', type=int, default=1)
+
     args = get_args_training()
 
     main(args)
