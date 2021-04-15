@@ -29,15 +29,17 @@ test_root = args.test_root
 train_size = args.train_size
 
 file_path = args.backbone + '_' + args.bridge + '_' + args.decoder
+file_name = args.loss_func + '_size_' + str(args.train_size) + '_bs_' + str(args.batch_size) \
+                            + '_nfilters_' + str(args.n_filters)
+
 if 'MHSA' in args.bridge:
-    file_name = args.loss_func + '_size_' + str(args.train_size) + '_bs_' + str(args.batch_size) + '_nb_' + str(args.n_blocks)
-else: 
-    file_name = args.loss_func + '_size_' + str(args.train_size) + '_bs_' + str(args.batch_size)
+    file_name = file_name + '_nblocks_' + str(args.n_blocks)
+
 
 # Checkpoint setting
 checkpoint_path = os.path.join(args.saved_checkpoint, file_path)
 create_dir(checkpoint_path)
-checkpoint_name = os.path.join(args.saved_checkpoint, file_name + '.pth.tar')
+checkpoint_name = os.path.join(checkpoint_path, file_name + '.pth.tar')
 args.checkpoint_name = checkpoint_name
 
 # Log setting

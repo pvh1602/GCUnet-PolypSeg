@@ -51,7 +51,7 @@ def main(args):
     # Checkpoint setting
     checkpoint_path = os.path.join(args.saved_checkpoint, file_path)
     create_dir(checkpoint_path)
-    checkpoint_name = os.path.join(args.saved_checkpoint, file_name + '.pth.tar')
+    checkpoint_name = os.path.join(checkpoint_path, file_name + '.pth.tar')
     args.checkpoint_name = checkpoint_name
 
     # Log setting
