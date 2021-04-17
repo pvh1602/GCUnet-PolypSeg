@@ -246,7 +246,13 @@ class BottleStack(nn.Module):
 class MHSABridge(nn.Module):
     def __init__(self, in_channels, out_channels, fmap_size=None, num_block=None):
         super(MHSABridge, self).__init__()
+
         self.BoT = BottleStack(dim=in_channels, fmap_size=fmap_size, dim_out=out_channels, num_layers=num_block)
 
     def forward(self, x):
         return self.BoT(x)
+
+
+if __name__ == '__main__':
+    bot = MHSABridge(1024, 512, 16, 3).to('cuda')
+    summary(bot, (1024,16,16))

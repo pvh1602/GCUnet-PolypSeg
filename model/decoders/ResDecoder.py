@@ -2,8 +2,12 @@ import sys
 sys.path.append('..')
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
 from .modules import *
+from arguments import *
+args = get_args_training()
+
 
 class ResDecoder(nn.Module):
     def __init__(self, in_channels=None, filters=[64, 128, 256, 512, 1024], resolution=(256, 256)):
@@ -39,7 +43,10 @@ class ResDecoder(nn.Module):
             # print(f"After Concat x shape is {x.shape}")
             x = self.layers[i](x)
             # print(f"After ResBlock x shape is {x.shape}")
-        
+        if 'Resnet' in args.backbone:
+            x = F.interpolate(x, size=args.train_size)
+
+
         x = self.output_layer(x)
 
         return x

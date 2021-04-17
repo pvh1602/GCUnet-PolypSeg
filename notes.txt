@@ -1,0 +1,13 @@
+##### 17/04/2021
+1.  SimpleDecoder reduce 3m params in ResUnet 
+    and 8m params in Unet with Resnet50 as backbone
+
+2. All experiments (Resnet backbone, ResUnet) with structure loss converges at value 0.044
+
+TODO: 
+1. Add Augmentations
+2. Add Resnet layer as bridge
+3. Test SASA as backbone
+4. Run experiments with train_size 352
+5. Try with larger batchsize
+

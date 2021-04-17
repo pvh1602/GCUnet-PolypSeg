@@ -17,30 +17,69 @@ elif args.backbone == 'Resnet34':
 elif args.backbone == 'Resnet18':
     from .backbones.ResNet import resnet18
     encoder = resnet18(pretrained=True)
+else:
+    assert False, f"Do not exist {args.backbone} backbone!"
     
+
 if args.bridge == 'ResBridge':
     from .bridges import ResBridge as bridge
 elif args.bridge == 'MHSABridge':
     from .bridges import MHSABridge as bridge
+else:
+    assert False, f"Do not exist {args.bridge} bridge!"
+
 
 if args.decoder == 'ResDecoder':
     from .decoders import ResDecoder as decoder
+elif args.decoder == 'SimpleDecoder':
+    from .decoders import SimpleDecoder as decoder
+else:
+    assert False, f"Do not exist {args.decoder} decoder!"
+
+
+
+
+filters_set = [
+    [64, 128, 256, 512],
+    [64, 128, 256, 512, 512],
+    [64, 64, 128, 256, 512],
+    [64, 256, 512, 1024, 512],
+    ]
+
+fmap_bridge_set = [
+    (32, 32),
+    (16, 16),
+    (44, 44),
+    (22, 22)
+]
+
 
 
 class Unet(nn.Module):
     def __init__(self, in_channels, filters=[64, 128, 256, 512], fmap_size=(args.train_size, args.train_size), num_block=args.n_blocks):
         super(Unet, self).__init__()
-        filters = [2**(i+6) for i in range(args.n_filters)]
-        filters = [64, 256, 512, 1024, 1024]
+
+        if args.backbone == 'ResEncoder' and args.n_filters == 4:
+            filters = filters_set[0]
+            fmap_size = (int(args.train_size / 8), int(args.train_size / 8))
+        elif args.backbone == 'ResEncoder' and args.n_filters == 5:
+            filters = filters_set[1]
+            fmap_size = (int(args.train_size / 8), int(args.train_size / 8))
+        elif args.backbone == 'Resnet34' or args.backbone == 'Resnet18':
+            filters = filters_set[2] 
+            fmap_size = (int(args.train_size / 16), int(args.train_size / 16))
+        elif args.backbone == 'Resnet50':
+            filters = filters_set[3] 
+            fmap_size = (int(args.train_size / 16), int(args.train_size / 16))
+        else:
+            assert False, f'Do not exist {args.backbone} backbone!'
+
         self.enc_filters = filters[:-1]
         self.bridge_in_channels = filters[-2]
         self.bridge_out_channels = filters[-1]
         self.dec_filters = filters
-        self.fmap_size = list(fmap_size)
-        self.bridge_in_fmap_size = [
-            int(self.fmap_size[0] / pow(2, len(self.enc_filters)-1)),
-            int(self.fmap_size[1] / pow(2, len(self.enc_filters)-1))
-        ]
+        self.bridge_in_fmap_size = fmap_size
+
         if 'Resnet' in args.backbone:
             self.encoder = encoder
         else:
@@ -56,16 +95,16 @@ class Unet(nn.Module):
 
     def forward(self, x):
         features = self.encoder(x)
-        print("Encoder")
-        for i, feature in enumerate(features):
-            print(f"feature {i} shape is: {feature.shape}")
+        # print("Encoder")
+        # for i, feature in enumerate(features):
+            # print(f"feature {i} shape is: {feature.shape}")
         
-        print("Bridge")
+        # print("Bridge")
         out_bridge = self.bridge(features[-1])
-        print(f"Bridge feature shape is: {out_bridge.shape}")
-        print("Decoder")
+        # print(f"Bridge feature shape is: {out_bridge.shape}")
+        # print("Decoder")
         outp = self.decoder(out_bridge, features)
-        print(f"Output shape is: {outp.shape}")
+        # print(f"Output shape is: {outp.shape}")
         return outp
 
 
