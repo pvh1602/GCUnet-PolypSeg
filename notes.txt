@@ -8,6 +8,6 @@ TODO:
 1. Add Augmentations
 2. Add Resnet layer as bridge
 3. Test SASA as backbone
-4. Run experiments with train_size 352
+4. Run experiments with train_size 352      # Running with Resnet backbone
 5. Try with larger batchsize
 
