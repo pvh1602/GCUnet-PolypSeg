@@ -172,11 +172,19 @@ class ResNet(nn.Module):
         self.bn1 = norm_layer(self.inplanes)
         self.relu = nn.ReLU(inplace=True)
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
+        
         self.layer1 = self._make_layer(block, 64, layers[0])
+        self.norm_conv1 = nn.Conv2d(in_channels=self.inplanes, out_channels=128, kernel_size=1)
+
         self.layer2 = self._make_layer(block, 128, layers[1], stride=2,
                                        dilate=replace_stride_with_dilation[0])
+        self.norm_conv2 = nn.Conv2d(in_channels=self.inplanes, out_channels=256, kernel_size=1)
+
         self.layer3 = self._make_layer(block, 256, layers[2], stride=2,
                                        dilate=replace_stride_with_dilation[1])
+        self.norm_conv3 = nn.Conv2d(in_channels=self.inplanes, out_channels=512, kernel_size=1)
+
+
         # self.layer4 = self._make_layer(block, 512, layers[3], stride=2,
         #                                dilate=replace_stride_with_dilation[2]) 
 
@@ -232,18 +240,19 @@ class ResNet(nn.Module):
         x = self.conv1(x)
         x = self.bn1(x)
         x = self.relu(x)
-        x = self.maxpool(x)
-        print(f"features after conv and pooling {x.shape}")     # 1, 64, 64, 64
         features = []
+        features.append(x)          #       1 64 128 128
+        x = self.maxpool(x)
+        # print(f"features after conv and pooling {x.shape}")     # 1, 64, 64, 64
         x = self.layer1(x)
         features.append(x)      # 1, 64, 64, 64
-        print(f"features after layer 1 {x.shape}")
+        # print(f"features after layer 1 {x.shape}")
         x = self.layer2(x)  
         features.append(x)      # 1, 128, 32, 32
-        print(f"features after layer 2 {x.shape}")
+        # print(f"features after layer 2 {x.shape}")
         x = self.layer3(x)
         features.append(x)      # 1, 256, 16, 16
-        print(f"features after layer 3 {x.shape}")
+        # print(f"features after layer 3 {x.shape}")
         # x = self.layer4(x)      # Use BoT at here
         # features.append(x)      # 1, 512, 8, 8
         # print(f"features after layer 4 {x.shape}")
@@ -268,13 +277,13 @@ def _resnet(
         pretrained_state_dict = load_state_dict_from_url(model_urls[arch],
                                               progress=progress)
         pretrained_param_names = list(pretrained_state_dict.keys())
-        print("Pretrained params: ")
-        print(pretrained_param_names)
+        # print("Pretrained params: ")
+        # print(pretrained_param_names)
 
         state_dict = model.state_dict()
         param_names = list(state_dict.keys())
-        print("Model params: ")
-        print(param_names)
+        # print("Model params: ")
+        # print(param_names)
 
         for name in param_names:
             if name not in pretrained_param_names:

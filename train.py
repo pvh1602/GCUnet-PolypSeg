@@ -65,7 +65,7 @@ def main(args):
 
     # Model setting
     model = Unet(in_channels=3).to(device)
-    # summary(model, (3,256,256))
+    summary(model, (3,256,256))
     criterion = getattr(module_loss, args.loss_func)
     metric = AvgMeter()
 
