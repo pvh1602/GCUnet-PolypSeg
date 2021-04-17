@@ -26,9 +26,7 @@ np.random.seed(SEED)
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 
-
 def main(args):
-
     print('=' * 100)
     print('Arguments =')
     for arg in vars(args):
@@ -43,8 +41,8 @@ def main(args):
 
     file_path = args.backbone + '_' + args.bridge + '_' + args.decoder
     file_name = args.loss_func + '_size_' + str(args.train_size) + '_bs_' + str(args.batch_size) \
-                                + '_nfilters_' + str(args.n_filters)
-    
+                + '_nfilters_' + str(args.n_filters)
+
     if 'MHSA' in args.bridge:
         file_name = file_name + '_nblocks_' + str(args.n_blocks)
 
@@ -60,7 +58,7 @@ def main(args):
     logging_name = os.path.join(logging_path, file_name + '.log')
     # if os.path.exists(logging_name) and not args.resume:
     #     os.remove(logging_name)
-    logging.basicConfig(filename=logging_name, format='%(asctime)s %(message)s', filemode='a')       
+    logging.basicConfig(filename=logging_name, format='%(asctime)s %(message)s', filemode='a')
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
     args.logger = logger
@@ -69,7 +67,7 @@ def main(args):
     model = Unet(in_channels=3).to(device)
     # summary(model, (3,256,256))
     criterion = getattr(module_loss, args.loss_func)
-    metric = AvgMeter() 
+    metric = AvgMeter()
 
     # Dataloader
     data_loader = get_loaders(
@@ -89,14 +87,13 @@ def main(args):
         print("Load model")
         checkpoint = torch.load(checkpoint_name)
         load_checkpoint(checkpoint, model, optimizer, lr_scheduler)
-        args.loaded_epoch = 1 +  checkpoint['epoch']
-
+        args.loaded_epoch = 1 + checkpoint['epoch']
 
     trainer = Trainer(
-        model=model, 
-        criterion=criterion, 
-        optimizer=optimizer, 
-        device=device, 
+        model=model,
+        criterion=criterion,
+        optimizer=optimizer,
+        device=device,
         data_loader=data_loader,
         metric=metric,
         lr_scheduler=lr_scheduler,
@@ -106,11 +103,9 @@ def main(args):
         n_epochs=n_epochs
     )
     trainer.train()
-    
 
 
 if __name__ == '__main__':
-
     args = get_args_training()
 
     main(args)
