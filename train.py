@@ -48,14 +48,24 @@ def main(args):
 
     # Checkpoint setting
     create_dir(args.saved_checkpoint)
+    if args.augmentation:
+        args.saved_checkpoint = os.path.join(args.saved_checkpoint, 'Augmentation')
+        create_dir(args.saved_checkpoint)
+
     checkpoint_path = os.path.join(args.saved_checkpoint, file_path)
     create_dir(checkpoint_path)
     checkpoint_name = os.path.join(checkpoint_path, file_name + '.pth.tar')
     args.checkpoint_name = checkpoint_name
 
     # Log setting
-    logging_path = os.path.join(args.logging, file_path)
+    logging_path = args.logging
     create_dir(logging_path)
+    if args.augmentation:
+        logging_path = os.path.join(logging_path, 'Augmentation')
+        create_dir(logging_path)
+    logging_path = os.path.join(logging_path, file_path)
+    create_dir(logging_path)
+        
     logging_name = os.path.join(logging_path, file_name + '.log')
     # if os.path.exists(logging_name) and not args.resume:
     #     os.remove(logging_name)

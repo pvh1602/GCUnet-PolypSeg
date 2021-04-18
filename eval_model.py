@@ -37,15 +37,23 @@ if 'MHSA' in args.bridge:
 
 
 # Checkpoint setting
+if args.augmentation:
+    args.saved_checkpoint = os.path.join(args.saved_checkpoint, 'Augmentation')
+    create_dir(args.saved_checkpoint)
 checkpoint_path = os.path.join(args.saved_checkpoint, file_path)
 create_dir(checkpoint_path)
 checkpoint_name = os.path.join(checkpoint_path, file_name + '.pth.tar')
 args.checkpoint_name = checkpoint_name
 
 # Log setting
-logging_path = os.path.join(args.result_path, file_path)
+create_dir(args.result_path)
+logging_path = args.result_path
+if args.augmentation:
+    logging_path = os.path.join(logging_path, 'Augmentation')   # results/Augmentation
+    create_dir(logging_path)
+logging_path = os.path.join(logging_path, file_path)    # results/[Augmentation]/arch_name/
 create_dir(logging_path)
-logging_name = os.path.join(logging_path, file_name + '.log')
+logging_name = os.path.join(logging_path, file_name + '.log') # results/[Augmentation]/arch_name/setting.log
 if os.path.exists(logging_name):
     os.remove(logging_name)
 logging.basicConfig(filename=logging_name, format='%(asctime)s %(message)s', filemode='a')       
