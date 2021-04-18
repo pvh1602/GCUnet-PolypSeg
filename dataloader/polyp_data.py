@@ -1,7 +1,10 @@
 import os
+import numpy as np
 from PIL import Image
 import torch.utils.data as data
 import torchvision.transforms as transforms
+from torchvision.transforms.transforms import ColorJitter
+import albumentations as A
 
 
 class PolypDataset(data.Dataset):
@@ -24,6 +27,7 @@ class PolypDataset(data.Dataset):
         self.gts = sorted(self.gts)
         # self.filter_files()
         self.size = len(self.images)
+
         self.img_transform = transforms.Compose([
             transforms.Resize((self.trainsize, self.trainsize)),
             transforms.ToTensor(),
@@ -36,8 +40,11 @@ class PolypDataset(data.Dataset):
     def __getitem__(self, index):
         image = self.rgb_loader(self.images[index])
         gt = self.binary_loader(self.gts[index])
-        image = self.img_transform(image)
-        gt = self.gt_transform(gt)
+        if args.transform: 
+            image, gt = self.additional_transform(image, gt)
+        else:    
+            image = self.img_transform(image)
+            gt = self.gt_transform(gt)
         return image, gt
 
     def filter_files(self):
@@ -73,6 +80,31 @@ class PolypDataset(data.Dataset):
             return img.resize((w, h), Image.BILINEAR), gt.resize((w, h), Image.NEAREST)
         else:
             return img, gt
+
+    def additional_transform(self, image, mask):
+        image = np.array(image)
+        mask = np.array(mask, np.float32)
+        mask[mask <= 20.0] = 0.0
+        mask[mask >= 1.0] = 1.0
+        transform = A.Compose(
+            [
+                A.Resize(self.trainsize, self.trainsize),
+                A.Flip(p=0.5),
+                A.MotionBlur(p=0.35),
+                A.Rotate(p=0.5),
+                A.ColorJitter(p=0.5),
+                A.Normalize(
+                    [0.485, 0.456, 0.406],
+                    [0.229, 0.224, 0.225]
+                ),
+                A.ToTensor()
+            ]
+        )
+    
+        transformed = transform(image=image, mask=mask)
+        image = transformed['image']
+        mask = transformed['mask']
+        return image, mask
 
     def __len__(self):
         return self.size
