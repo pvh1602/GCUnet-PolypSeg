@@ -20,6 +20,7 @@ def get_args_training():
     args.add_argument('--backbone', type=str, default='ResEncoder')
     args.add_argument('--bridge', type=str, default='ResBridge')
     args.add_argument('--decoder', type=str, default='ResDecoder')
+    args.add_argument('--pretrained', action='store_false', default=True)
     args.add_argument('--n_blocks', type=int, default=1)
     args.add_argument('--n_filters', type=int, default=4)
     

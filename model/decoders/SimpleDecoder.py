@@ -5,6 +5,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from .modules import *
+from arguments import *
+args = get_args_training()
 
 class SimpleDecoder(nn.Module):
     def __init__(self, in_channels=None, filters=[64, 128, 256, 512, 1024], resolution=(256, 256)):

@@ -47,6 +47,7 @@ def main(args):
         file_name = file_name + '_nblocks_' + str(args.n_blocks)
 
     # Checkpoint setting
+    create_dir(args.saved_checkpoint)
     checkpoint_path = os.path.join(args.saved_checkpoint, file_path)
     create_dir(checkpoint_path)
     checkpoint_name = os.path.join(checkpoint_path, file_name + '.pth.tar')
