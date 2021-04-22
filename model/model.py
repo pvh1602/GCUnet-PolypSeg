@@ -108,7 +108,7 @@ class Unet(nn.Module):
                                 in_channels=self.bridge_in_channels, 
                                 out_channels=self.bridge_out_channels, 
                                 fmap_size=tuple(self.bridge_in_fmap_size),
-                                num_block=1
+                                num_block=args.n_blocks
                                 )
         
         # Decoder
