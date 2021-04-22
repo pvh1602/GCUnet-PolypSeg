@@ -5,6 +5,9 @@ import torch.utils.data as data
 import torchvision.transforms as transforms
 from torchvision.transforms.transforms import ColorJitter
 import albumentations as A
+from albumentations.pytorch import ToTensorV2
+from arguments import *
+args = get_args_training()
 
 
 class PolypDataset(data.Dataset):
@@ -40,7 +43,7 @@ class PolypDataset(data.Dataset):
     def __getitem__(self, index):
         image = self.rgb_loader(self.images[index])
         gt = self.binary_loader(self.gts[index])
-        if args.transform: 
+        if args.augmentation: 
             image, gt = self.additional_transform(image, gt)
         else:    
             image = self.img_transform(image)
@@ -97,13 +100,13 @@ class PolypDataset(data.Dataset):
                     [0.485, 0.456, 0.406],
                     [0.229, 0.224, 0.225]
                 ),
-                A.ToTensor()
+                ToTensorV2()
             ]
         )
     
         transformed = transform(image=image, mask=mask)
         image = transformed['image']
-        mask = transformed['mask']
+        mask = transformed['mask'].unsqueeze(0)
         return image, mask
 
     def __len__(self):

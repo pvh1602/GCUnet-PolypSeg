@@ -17,6 +17,7 @@ from dataloader.polyp_data import *
 from trainer.trainer import *
 from utils import *
 from arguments import get_args_training
+from eval_model import *
 
 SEED = 123
 torch.manual_seed(SEED)
@@ -115,6 +116,9 @@ def main(args):
     )
     trainer.train()
 
+    
+    # evaluate models
+    eval_model(args)
 
 if __name__ == '__main__':
     args = get_args_training()

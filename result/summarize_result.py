@@ -9,7 +9,7 @@ def summarise(root='./'):
     
     arch_names = os.listdir(root)
     for arch_name in arch_names:
-        if '.py' in arch_name:
+        if '.py' in arch_name or 'Augmentation' in arch_name:
             continue
         dir_path = os.path.join(root, arch_name)
         for file_name in os.listdir(dir_path):
@@ -37,3 +37,6 @@ def summarise(root='./'):
         columns.append(metric + '-mIoU')
     df = pd.DataFrame(results, columns=columns)
     df.to_excel('./summary_results.xlsx')
+
+if __name__ == '__main__':
+    summarise()
