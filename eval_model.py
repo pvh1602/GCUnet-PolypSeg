@@ -78,7 +78,10 @@ def eval_model(args):
     for _data_name in ['CVC-300', 'CVC-ClinicDB', 'Kvasir', 'CVC-ColonDB', 'ETIS-LaribPolypDB']:
     # for _data_name in ['CVC-ColonDB', 'ETIS-LaribPolypDB']:
         data_path = '{}/{}/'.format(args.test_root, _data_name)
-        save_path = '{}/{}/{}/{}'.format(args.saved_img, file_path, file_name, _data_name)
+        if args.augmentation:
+            save_path = '{}/{}/{}/{}/{}'.format(args.saved_img, 'Augmentation', file_path, file_name, _data_name)
+        else:
+            save_path = '{}/{}/{}/{}'.format(args.saved_img, file_path, file_name, _data_name)
         # create_dir(save_path)
 
         os.makedirs(save_path, exist_ok=True)
@@ -106,7 +109,7 @@ def eval_model(args):
                 pred_mask = F.sigmoid(pred_mask)
 
                 # Save all predicting masks
-                # plot_results(pred_masks=pred_mask, true_masks=gt, images=real_image, result_path=save_path, name=name)
+                plot_results(pred_masks=pred_mask, true_masks=gt, images=real_image, result_path=save_path, name=name)
 
                 # Calculate all scores
                 _recall, _specificity, _precision, _F1, _F2, \

@@ -60,11 +60,12 @@ def plot_results(pred_masks, true_masks, images, result_path='./result_image', n
 
     for i in range(len(true_masks)):
         name = name if name is not None else 'temp'
+        pred_masks[i] = (pred_masks[i] >= 0.5).float()
         pred_masks_img = transforms.ToPILImage()(pred_masks[i]).convert('RGB')
         true_masks_img = transforms.ToPILImage()(true_masks[i]).convert('RGB')
         # images_img = transforms.ToPILImage()(images[i]).convert('RGB')
 
-        fig = plt.figure(figsize=(16, 16))
+        fig = plt.figure(figsize=(16, 16), num=1, clear=True)
         axes = []
 
         # True image
@@ -86,5 +87,6 @@ def plot_results(pred_masks, true_masks, images, result_path='./result_image', n
         plt.imshow(pred_masks_img)
 
         plt.savefig(os.path.join(result_path, name))
-        plt.close(fig)   # Reusing the fig within each batch
-    plt.close(fig)  # Clear the fig after each batch
+    #     fig.clear()
+    #     plt.close(fig)   # Reusing the fig within each batch
+    # plt.close(fig)  # Clear the fig after each batch
