@@ -117,10 +117,12 @@ def main(args):
     trainer.train()
 
     
-    # evaluate models
-    eval_model(args)
+
 
 if __name__ == '__main__':
     args = get_args_training()
-
     main(args)
+
+    # evaluate models
+    args = get_args_training()
+    eval_model(args)
