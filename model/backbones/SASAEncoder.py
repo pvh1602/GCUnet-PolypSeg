@@ -136,8 +136,9 @@ def get_model_parameters(model):
 
 if __name__ == '__main__':
     x = torch.randn(1,3,256,256).to('cuda')
-    model = ResNet38(num_classes=2, stem=True).to('cuda')
+    model = ResNet26(num_classes=2, stem=True).to('cuda')
     n_params = get_model_parameters(model)
+    print(f"The number of params is {n_params}")
     y = model(x)
     print(y.shape)
     print(f"total params {n_params}")
