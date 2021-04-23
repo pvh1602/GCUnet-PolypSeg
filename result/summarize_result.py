@@ -9,7 +9,7 @@ def summarise(root='./'):
     
     arch_names = os.listdir(root)
     for arch_name in arch_names:
-        if '.py' in arch_name or 'Augmentation' in arch_name:
+        if '.py' in arch_name or 'Augmentation' in arch_name or '.xlsx' in arch_name:
             continue
         dir_path = os.path.join(root, arch_name)
         for file_name in os.listdir(dir_path):
