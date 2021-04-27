@@ -24,7 +24,7 @@ def summarise(root='./'):
                     if 'F1' in line:
                         res.append('{:.4f}'.format(float(line.strip('\n').split(' ')[-1])))
                         continue
-                    if 'IoU_mean' in line:
+                    if 'IoU_poly' in line:
                         res.append('{:.4f}'.format(float(line.strip('\n').split(' ')[-1])))
             results.append(res)
     #         break
