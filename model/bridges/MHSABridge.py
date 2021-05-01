@@ -254,5 +254,5 @@ class MHSABridge(nn.Module):
 
 
 if __name__ == '__main__':
-    bot = MHSABridge(1024, 512, 16, 3).to('cuda')
+    bot = MHSABridge(1024, 2048, 16, 3).to('cuda')
     summary(bot, (1024,16,16))

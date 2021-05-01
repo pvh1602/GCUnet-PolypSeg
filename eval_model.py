@@ -33,7 +33,7 @@ def eval_model(args):
     file_name = args.loss_func + '_size_' + str(args.train_size) + '_bs_' + str(args.batch_size) \
                                 + '_nfilters_' + str(args.n_filters)
 
-    if 'MHSA' in args.bridge:
+    if 'MHSA' in args.bridge or 'Lambda' in args.bridge:
         file_name = file_name + '_nblocks_' + str(args.n_blocks)
 
 

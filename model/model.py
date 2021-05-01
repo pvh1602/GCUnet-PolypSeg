@@ -29,6 +29,9 @@ if args.bridge == 'ResBridge':
     from .bridges import ResBridge as bridge
 elif args.bridge == 'MHSABridge':
     from .bridges import MHSABridge as bridge
+elif args.bridge == 'LambdaBridge':
+    from .bridges import LambdaBridge as bridge
+
 elif args.bridge == 'Resnet50':
     from .bridges.ResnetBridge import resnet50
     bridge = resnet50(pretrained=args.pretrained)
@@ -46,6 +49,8 @@ if args.decoder == 'ResDecoder':
     from .decoders import ResDecoder as decoder
 elif args.decoder == 'SimpleDecoder':
     from .decoders import SimpleDecoder as decoder
+elif args.decoder == 'DepthwsDecoder':
+    from .decoders import DepthwsDecoder as decoder
 else:
     assert False, f"Do not exist {args.decoder} decoder!"
 
@@ -57,6 +62,7 @@ filters_set = [
     [64, 128, 256, 512, 512],
     [64, 64, 128, 256, 512],
     [64, 256, 512, 1024, 512],
+    [64, 256, 512, 1024, 2048],
     ]
 
 fmap_bridge_set = [
@@ -82,8 +88,14 @@ class Unet(nn.Module):
         elif args.backbone == 'Resnet34' or args.backbone == 'Resnet18':
             filters = filters_set[2] 
             fmap_size = (int(args.train_size / 16), int(args.train_size / 16))
-        elif args.backbone == 'Resnet50':
+        elif args.backbone == 'Resnet50' and args.bridge == 'MHSABridge':
             filters = filters_set[3] 
+            fmap_size = (int(args.train_size / 16), int(args.train_size / 16))
+        elif args.backbone == 'Resnet50' and args.bridge == 'LambdaBridge':
+            filters = filters_set[3] 
+            fmap_size = (int(args.train_size / 16), int(args.train_size / 16))
+        elif args.backbone == 'Resnet50' and args.bridge == 'Resnet50':
+            filters = filters_set[4] 
             fmap_size = (int(args.train_size / 16), int(args.train_size / 16))
         else:
             assert False, f'Do not exist {args.backbone} backbone!'
