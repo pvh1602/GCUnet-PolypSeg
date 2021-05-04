@@ -151,7 +151,7 @@ class LambdaStack(nn.Module):
             is_first = i == 0
             stride = 2 if is_first else 1
             layers.append(
-                LambdaBlock(in_planes, planes, stride=stride)
+                LambdaBlock(in_planes, planes, stride=stride, heads=4, dim_k=16, dim_u=1, r=23, n=None)
             )
             in_planes = planes * LambdaBlock.expansion
         
