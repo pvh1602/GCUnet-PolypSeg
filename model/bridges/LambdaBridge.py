@@ -144,14 +144,14 @@ class LambdaBlock(nn.Module):
 
 
 class LambdaStack(nn.Module):
-    def __init__(self, in_planes, planes, num_block=1, heads=4, dim_k=16, dim_u=1, r=23, n=None):
+    def __init__(self, in_planes, planes, num_block=1, heads=4, dim_k=16, dim_u=1, r=9, n=None):
         super(LambdaStack, self).__init__()
         layers = []
         for i in range(num_block):
             is_first = i == 0
             stride = 2 if is_first else 1
             layers.append(
-                LambdaBlock(in_planes, planes, stride=stride, heads=4, dim_k=16, dim_u=1, r=23, n=None)
+                LambdaBlock(in_planes, planes, stride=stride, heads=heads, dim_k=dim_k, dim_u=dim_u, r=r, n=n)
             )
             in_planes = planes * LambdaBlock.expansion
         

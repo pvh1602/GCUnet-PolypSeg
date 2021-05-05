@@ -34,13 +34,13 @@ elif args.bridge == 'LambdaBridge':
 
 elif args.bridge == 'Resnet50':
     from .bridges.ResnetBridge import resnet50
-    bridge = resnet50(pretrained=args.pretrained)
+    bridge = resnet50(pretrained=False)
 elif args.bridge == 'Resnet34':
     from .bridges.ResnetBridge import resnet34
-    bridge = resnet34(pretrained=args.pretrained)
+    bridge = resnet34(pretrained=False)
 elif args.bridge == 'Resnet18':
     from .bridges.ResnetBridge import resnet18
-    bridge = resnet18(pretrained=args.pretrained)
+    bridge = resnet18(pretrained=False)     # Set false in order to make fair with MHSA and Lambda
 else:
     assert False, f"Do not exist {args.bridge} bridge!"
 
