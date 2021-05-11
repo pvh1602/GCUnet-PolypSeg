@@ -23,6 +23,7 @@ def get_args_training():
     args.add_argument('--pretrained', action='store_false', default=True)
     args.add_argument('--n_blocks', type=int, default=1)
     args.add_argument('--n_filters', type=int, default=4)
+    args.add_argument('--r', type=int, default=9)
     args.add_argument('--augmentation', action='store_true', default=False, help='default load data w/o augmentation')
 
     args = args.parse_args()

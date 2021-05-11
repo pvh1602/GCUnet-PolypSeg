@@ -36,7 +36,7 @@ def eval_model(args):
     if 'MHSA' in args.bridge or 'Lambda' in args.bridge:
         file_name = file_name + '_nblocks_' + str(args.n_blocks)
     if 'Lambda' in args.bridge:
-        file_name = file_name + '_r_9'
+        file_name = file_name + f'_r_{args.r}'
 
     # Checkpoint setting
     if args.augmentation:

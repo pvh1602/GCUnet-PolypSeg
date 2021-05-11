@@ -21,6 +21,16 @@ elif args.backbone == 'Resnet34':
 elif args.backbone == 'Resnet18':
     from .backbones.ResNet import resnet18
     encoder = resnet18(pretrained=args.pretrained)
+############# Lambda Resnet
+elif args.backbone == 'LambdaResnet50':
+    from .backbones.LambdaResNet import lambdaresnet50
+    encoder = lambdaresnet50(pretrained=args.pretrained)
+elif args.backbone == 'LambdaResnet34':
+    from .backbones.LambdaResNet import lambdaresnet34
+    encoder = lambdaresnet34(pretrained=args.pretrained)
+elif args.backbone == 'LambdaResnet18':
+    from .backbones.LambdaResNet import lambdaresnet18
+    encoder = lambdaresnet18(pretrained=args.pretrained)
 else:
     assert False, f"Do not exist {args.backbone} backbone!"
     
@@ -85,7 +95,19 @@ class Unet(nn.Module):
         elif args.backbone == 'ResEncoder' and args.n_filters == 5:
             filters = filters_set[1]
             fmap_size = (int(args.train_size / 8), int(args.train_size / 8))
-        elif args.backbone == 'Resnet34' or args.backbone == 'Resnet18':
+        # elif args.backbone == 'Resnet34' or args.backbone == 'Resnet18':
+        #     filters = filters_set[2] 
+        #     fmap_size = (int(args.train_size / 16), int(args.train_size / 16))
+        # elif args.backbone == 'Resnet50' and args.bridge == 'MHSABridge':
+        #     filters = filters_set[3] 
+        #     fmap_size = (int(args.train_size / 16), int(args.train_size / 16))
+        # elif args.backbone == 'Resnet50' and args.bridge == 'LambdaBridge':
+        #     filters = filters_set[3] 
+        #     fmap_size = (int(args.train_size / 16), int(args.train_size / 16))
+        # elif args.backbone == 'Resnet50' and args.bridge == 'Resnet50':
+        #     filters = filters_set[4] 
+        #     fmap_size = (int(args.train_size / 16), int(args.train_size / 16))
+        elif 'Resnet34' in args.backbone or 'Resnet18' in args.backbone :
             filters = filters_set[2] 
             fmap_size = (int(args.train_size / 16), int(args.train_size / 16))
         elif args.backbone == 'Resnet50' and args.bridge == 'MHSABridge':
