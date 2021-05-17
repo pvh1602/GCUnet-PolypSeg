@@ -36,6 +36,12 @@ def summarise(root='./'):
         columns.append(metric + '-mDice')
         columns.append(metric + '-mIoU')
     df = pd.DataFrame(results, columns=columns)
+    new_cols = ['Architecture', 'Setting',
+                'Kvasir-mDice', 'Kvasir-mIoU', 'CVC-ClinicDB-mDice', 'CVC-ClinicDB-mIoU',
+                'CVC-ColonDB-mDice', 'CVC-ColonDB-mIoU', 'CVC-300-mDice', 'CVC-300-mIoU',
+                'ETIS-LaribPolypDB-mDice', 'ETIS-LaribPolypDB-mIoU'
+                ]
+    df = df[new_cols]
     df.to_excel('./summary_results.xlsx')
 
 if __name__ == '__main__':

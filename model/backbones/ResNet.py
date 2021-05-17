@@ -243,6 +243,7 @@ class ResNet(nn.Module):
         x = self.relu(x)
         features = []
         features.append(x)          #       1 64 128 128
+        # print(x.shape)
         x = self.maxpool(x)
         # print(f"features after conv and pooling {x.shape}")     # 1, 64, 64, 64
         x = self.layer1(x)

@@ -1,10 +1,10 @@
 import sys
-sys.path.append('..')
+# sys.path.append('../../../')
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from .modules import *
+from model.modules.modules import ResidualBlock
 from arguments import *
 args = get_args_training()
 
@@ -43,7 +43,7 @@ class SimpleDecoder(nn.Module):
             x = self.layers[i](x)
             # print(f"After ResBlock x shape is {x.shape}")
 
-        if 'Resnet' in args.backbone:
+        if 'Resnet' in args.backbone or 'res2net50' in args.backbone:
             x = F.interpolate(x, size=args.train_size)
             
         x = self.output_layer(x)
@@ -53,7 +53,7 @@ class SimpleDecoder(nn.Module):
 
 
 if __name__ == '__main__':
-    x = torch.randn(1,1024,16,16)
+    x = torch.randn(64,1024,16,16)
     features = []
     fm_size = 256
     for i in [64,128,256,512]:

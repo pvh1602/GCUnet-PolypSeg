@@ -43,7 +43,7 @@ class ResDecoder(nn.Module):
             # print(f"After Concat x shape is {x.shape}")
             x = self.layers[i](x)
             # print(f"After ResBlock x shape is {x.shape}")
-        if 'Resnet' in args.backbone:
+        if 'Resnet' in args.backbone or 'res2net50' in args.backbone:
             x = F.interpolate(x, size=args.train_size)
 
 

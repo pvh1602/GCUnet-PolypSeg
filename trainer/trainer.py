@@ -73,7 +73,8 @@ class Trainer():
             loaded_epoch = self.args.loaded_epoch
         for epoch in range(loaded_epoch, self.n_epochs):
             self._train_epoch(epoch)
-            self._save_checkpoint(epoch)
+            if epoch == self.n_epochs - 1:
+                self._save_checkpoint(epoch)
 
 
 

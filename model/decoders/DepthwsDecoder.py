@@ -1,3 +1,6 @@
+import os
+# import sys
+# sys.path.append(....)
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -29,7 +32,7 @@ class SEnet(nn.Module):
         
 
 class DepthwsBlock(nn.Module):
-    def __init__(self, in_channels, out_channels, expand_ratio=2, stride=1, padding=1):
+    def __init__(self, in_channels, out_channels, expand_ratio=1, stride=1, padding=1):
         super(DepthwsBlock, self).__init__()
         expand_channels = in_channels * expand_ratio
         self.block = nn.Sequential(
@@ -87,7 +90,7 @@ class DepthwsDecoder(nn.Module):
             # print(f"After Concat x shape is {x.shape}")
             x = self.layers[i](x)
             # print(f"After ResBlock x shape is {x.shape}")
-        if 'Resnet' in args.backbone:
+        if 'Resnet' in args.backbone or 'res2net50' in args.backbone:
             x = F.interpolate(x, size=args.train_size)
 
 
@@ -98,7 +101,7 @@ class DepthwsDecoder(nn.Module):
 
 
 if __name__ == '__main__':
-    x = torch.randn(2,1024,16,16)
+    x = torch.randn(16,1024,11,11)
     features = []
     fm_size = 256
     for i in [64,128,256,512]:

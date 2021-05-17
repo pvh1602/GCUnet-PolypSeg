@@ -70,8 +70,8 @@ def main(args):
     create_dir(logging_path)
         
     logging_name = os.path.join(logging_path, file_name + '.log')
-    # if os.path.exists(logging_name) and not args.resume:
-    #     os.remove(logging_name)
+    if os.path.exists(logging_name) and not args.resume:
+        os.remove(logging_name)
     logging.basicConfig(filename=logging_name, format='%(asctime)s %(message)s', filemode='a')
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)

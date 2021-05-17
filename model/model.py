@@ -1,3 +1,4 @@
+# from datn.model import backbones
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -31,9 +32,19 @@ elif args.backbone == 'LambdaResnet34':
 elif args.backbone == 'LambdaResnet18':
     from .backbones.LambdaResNet import lambdaresnet18
     encoder = lambdaresnet18(pretrained=args.pretrained)
+
+######### Res2Net Backbone
+elif args.backbone == 'res2net50_26w_4s':
+    from .backbones.Res2Net import res2net50_26w_4s
+    encoder = res2net50_26w_4s(pretrained=True)
+elif args.backbone == 'res2net50_48w_2s':
+    from .backbones.Res2Net import res2net50_48w_2s
+    encoder = res2net50_48w_2s(pretrained=True)
+
 else:
     assert False, f"Do not exist {args.backbone} backbone!"
-    
+
+######################################################################
 
 if args.bridge == 'ResBridge':
     from .bridges import ResBridge as bridge
@@ -61,6 +72,8 @@ elif args.decoder == 'SimpleDecoder':
     from .decoders import SimpleDecoder as decoder
 elif args.decoder == 'DepthwsDecoder':
     from .decoders import DepthwsDecoder as decoder
+elif args.decoder == 'SmallDecoder':
+    from .decoders import SmallDecoder as decoder
 else:
     assert False, f"Do not exist {args.decoder} decoder!"
 
@@ -110,10 +123,10 @@ class Unet(nn.Module):
         elif 'Resnet34' in args.backbone or 'Resnet18' in args.backbone :
             filters = filters_set[2] 
             fmap_size = (int(args.train_size / 16), int(args.train_size / 16))
-        elif args.backbone == 'Resnet50' and args.bridge == 'MHSABridge':
+        elif (args.backbone == 'Resnet50' or 'res2net50' in args.backbone)  and args.bridge == 'MHSABridge':
             filters = filters_set[3] 
             fmap_size = (int(args.train_size / 16), int(args.train_size / 16))
-        elif args.backbone == 'Resnet50' and args.bridge == 'LambdaBridge':
+        elif (args.backbone == 'Resnet50' or 'res2net50' in args.backbone) and args.bridge == 'LambdaBridge':
             filters = filters_set[3] 
             fmap_size = (int(args.train_size / 16), int(args.train_size / 16))
         elif args.backbone == 'Resnet50' and args.bridge == 'Resnet50':
@@ -129,7 +142,7 @@ class Unet(nn.Module):
         self.bridge_in_fmap_size = fmap_size
 
         # Backbone
-        if 'Resnet' in args.backbone:
+        if 'Resnet' in args.backbone or 'res2net50' in args.backbone:
             self.encoder = encoder
         else:
             self.encoder = encoder(in_channels=in_channels, filters=self.enc_filters, fmap_size=fmap_size)
