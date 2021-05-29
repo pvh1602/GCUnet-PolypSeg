@@ -10,6 +10,9 @@ from albumentations.pytorch import ToTensorV2
 import logging
 import pytorch_warmup as warmup
 from torchsummary import summary
+# from scipy import misc
+import cv2
+import imageio
 
 import model.loss as module_loss
 from model.metric import *
@@ -108,9 +111,20 @@ def eval_model(args):
                 # Upsample to be equal with ground truth mask
                 pred_mask = F.upsample(pred_mask, size=(exp_h, exp_w), mode='bilinear', align_corners=False)
                 pred_mask = F.sigmoid(pred_mask)
+                
+                # Plot image and save to 
+                res = pred_mask.data.cpu().numpy().squeeze()
+                res = (res - res.min()) / (res.max() - res.min() + 1e-8)
+                # vis_img_save_path = os.path.join(save_path, 'vis_img')
+                vis_img_save_path = save_path.replace('Augmentation', 'Visualize_img')
+                os.makedirs(vis_img_save_path, exist_ok=True)
+                img_path = os.path.join(vis_img_save_path, name)
+                # if i == 0:
+                #     print(img_path)
+                imageio.imwrite(img_path, res)
 
                 # Save all predicting masks
-                plot_results(pred_masks=pred_mask, true_masks=gt, images=real_image, result_path=save_path, name=name)
+                # plot_results(pred_masks=pred_mask, true_masks=gt, images=real_image, result_path=save_path, name=name)
 
                 # Calculate all scores
                 _recall, _specificity, _precision, _F1, _F2, \

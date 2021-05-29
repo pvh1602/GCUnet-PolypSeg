@@ -65,6 +65,7 @@ elif args.bridge == 'Resnet18':
 else:
     assert False, f"Do not exist {args.bridge} bridge!"
 
+######################################################################
 
 if args.decoder == 'ResDecoder':
     from .decoders import ResDecoder as decoder
@@ -127,6 +128,9 @@ class Unet(nn.Module):
             filters = filters_set[3] 
             fmap_size = (int(args.train_size / 16), int(args.train_size / 16))
         elif (args.backbone == 'Resnet50' or 'res2net50' in args.backbone) and args.bridge == 'LambdaBridge':
+            filters = filters_set[3] 
+            fmap_size = (int(args.train_size / 16), int(args.train_size / 16))
+        elif (args.backbone == 'Resnet50' or 'res2net50' in args.backbone) and args.bridge == 'ResBridge':
             filters = filters_set[3] 
             fmap_size = (int(args.train_size / 16), int(args.train_size / 16))
         elif args.backbone == 'Resnet50' and args.bridge == 'Resnet50':
