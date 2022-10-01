@@ -1,8 +1,5 @@
-# datn
-test
+# GCUnet-PolypSeg
 
-test server
-test server 2
-test server 3
-test git 
-test pycharm
+This is my bachelor thesis. I build a attention-based Unet model to do segmentation. Particularly, Unet has three components: Encoder, Bridge, and Decoder. I replace usual CNN blocks in components by attention-based blocks likes: Lambda-block or MHSA block.
+
+
